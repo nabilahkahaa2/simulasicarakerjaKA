@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>🎧 Simulasi AI Spotify - Belajar dari Data Lagu</title>
+  <style>
+    body {
+      font-family: 'Poppins', 'Comic Sans MS', sans-serif;
+      background: linear-gradient(135deg, #1db954 0%, #191414 100%);
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      background: #191414;
+      color: #1db954;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.8em;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #1db954;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: #121212;
+      padding: 30px;
+      border-radius: 25px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    h2 {
+      color: #1db954;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #ccc;
+      font-size: 1.1em;
+    }
+    .slide {
+      display: none;
+      animation: fadeIn 0.8s;
+    }
+    .active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .drop-zone {
+      width: 200px;
+      height: 200px;
+      border: 3px dashed #1db954;
+      border-radius: 20px;
+      background: #282828;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: 0.3s;
+      font-weight: bold;
+      color: #1db954;
+    }
+    .drop-zone.over {
+      background: #1db95433;
+      border-color: #1db954;
+    }
+    .draggable {
+      width: 180px;
+      height: 50px;
+      background: #333;
+      border-radius: 15px;
+      border: 2px solid #1db954;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      font-size: 1em;
+      transition: 0.3s;
+      margin: 10px;
+      color: #fff;
+    }
+    .draggable.dragging {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+    .draggables {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .drop-area {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .btn {
+      padding: 12px 28px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 30px;
+      background: #1db954;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s, background 0.2s;
+      outline: none;
+    }
+    .btn:hover {
+      background: #1ed760;
+      transform: scale(1.08);
+    }
+    .result {
+      font-weight: bold;
+      color: #1ed760;
+      margin-top: 15px;
+      font-size: 1.1em;
+      min-height: 30px;
+    }
+    .warning {
+      color: #ff5555;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>🎧 Simulasi AI Spotify - Belajar dari Data Lagu 🤖</header>
+
+  <div class="container">
+    <!-- Slide 1: Kelompokkan Lagu -->
+    <div class="slide active" id="slide1">
+      <h2>1. Kelompokkan Lagu Berdasarkan Penyanyi</h2>
+      <p>Tarik dan letakkan lagu ke kotak penyanyi yang sesuai!</p>
+
+      <div class="draggables">
+        <div class="draggable" draggable="true" data-artist="rizky">🎤 Bermuara - Rizky Febian</div>
+        <div class="draggable" draggable="true" data-artist="rizky">🎤 Seperti Kisah - Rizky Febian</div>
+        <div class="draggable" draggable="true" data-artist="mahalini">🎵 Sisa Rasa - Mahalini</div>
+        <div class="draggable" draggable="true" data-artist="raisa">🎶 Kali Kedua - Raisa</div>
+        <div class="draggable" draggable="true" data-artist="raisa">🎶 Terjebak Nostalgia - Raisa</div>
+        <div class="draggable" draggable="true" data-artist="raisa">🎶 Usai di Sini - Raisa</div>
+        <div class="draggable" draggable="true" data-artist="chrisye">🎼 Anak Sekolah - Chrisye</div>
+        <div class="draggable" draggable="true" data-artist="chrisye">🎼 Pergilah Kasih - Chrisye</div>
+        <div class="draggable" draggable="true" data-artist="chrisye">🎼 Andai Aku Bisa - Chrisye</div>
+        <div class="draggable" draggable="true" data-artist="chrisye">🎼 Kemesraan - Chrisye</div>
+        <div class="draggable" draggable="true" data-artist="chrisye">🎼 Cinta yang Lain - Chrisye</div>
+      </div>
+
+      <div class="drop-area">
+        <div class="drop-zone" id="rizky">🎤 Rizky Febian</div>
+        <div class="drop-zone" id="mahalini">🎵 Mahalini</div>
+        <div class="drop-zone" id="raisa">🎶 Raisa</div>
+        <div class="drop-zone" id="chrisye">🎼 Chrisye</div>
+      </div>
+
+      <div class="result" id="groupResult"></div>
+      <div class="warning" id="warning"></div>
+      <button class="btn" onclick="validateAndNext()">Selanjutnya ➡️</button>
+    </div>
+
+    <!-- Slide 2: Analisis Pola -->
+    <div class="slide" id="slide2">
+      <h2>2. AI Menganalisis Pola Lagu</h2>
+      <p>AI menghitung jumlah lagu di setiap penyanyi untuk melihat siapa yang paling sering diputar.</p>
+      <div class="result" id="analyzeResult"></div>
+      <button class="btn" onclick="nextSlide(3)">Selanjutnya ➡️</button>
+    </div>
+
+    <!-- Slide 3: Kesimpulan -->
+    <div class="slide" id="slide3">
+      <h2>3. Kesimpulan</h2>
+      <p>AI di Spotify belajar dari data lagu yang sering kamu putar.  
+      Karena lagu Chrisye paling banyak, AI menempatkan lagu Chrisye di urutan pertama playlist kamu! 🎶</p>
+      <div class="result">AI belajar dari data yang sering diputar dan memecahkan pola lagu yang sering kamu dengarkan.  
+      Dari pola itu, AI membuat keputusan untuk menampilkan lagu favoritmu di posisi teratas! 🤖💚</div>
+      <button class="btn" onclick="restart()">🔄 Ulangi dari Awal</button>
+    </div>
+  </div>
+
+  <script>
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const result = document.getElementById('groupResult');
+    const warning = document.getElementById('warning');
+    const analyzeResult = document.getElementById('analyzeResult');
+    let grouped = { rizky: 0, mahalini: 0, raisa: 0, chrisye: 0 };
+    let totalGrouped = 0;
+
+    draggables.forEach(item => {
+      item.addEventListener('dragstart', () => item.classList.add('dragging'));
+      item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('over');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        const dragged = document.querySelector('.dragging');
+        const artist = dragged.getAttribute('data-artist');
+        if (zone.id === artist) {
+          dragged.style.display = 'none';
+          grouped[artist]++;
+          totalGrouped++;
+          result.innerHTML = `✅ Lagu berhasil dimasukkan ke kotak ${zone.textContent}!`;
+          warning.innerHTML = "";
+        } else {
+          result.innerHTML = `❌ Lagu ini bukan milik ${zone.textContent}. Coba lagi!`;
+        }
+      });
+    });
+
+    function validateAndNext() {
+      const totalSongs = 11;
+      if (totalGrouped < totalSongs) {
+        warning.innerHTML = "⚠️ Kamu harus mengelompokkan semua lagu sebelum lanjut!";
+      } else {
+        warning.innerHTML = "";
+        showAnalysis();
+        nextSlide(2);
+      }
+    }
+
+    function showAnalysis() {
+      analyzeResult.innerHTML = `
+        <p>📊 Jumlah lagu yang diputar:</p>
+        <ul style="list-style:none; text-align:left; display:inline-block;">
+          <li>🎤 Rizky Febian: ${grouped.rizky} lagu</li>
+          <li>🎵 Mahalini: ${grouped.mahalini} lagu</li>
+          <li>🎶 Raisa: ${grouped.raisa} lagu</li>
+          <li>🎼 Chrisye: ${grouped.chrisye} lagu</li>
+        </ul>
+        <p>🎧 Hasil analisis: Penyanyi dengan lagu terbanyak adalah <b>Chrisye</b> (5 lagu)!  
+        Artinya, AI belajar bahwa kamu paling sering memutar lagu Chrisye.</p>
+      `;
+    }
+
+    function nextSlide(num) {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.getElementById('slide' + num).classList.add('active');
+    }
+
+    function restart() {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.getElementById('slide1').classList.add('active');
+      document.querySelectorAll('.draggable').forEach(d => {
+        d.style.display = 'flex';
+      });
+      result.innerHTML = "";
+      warning.innerHTML = "";
+      grouped = { rizky: 0, mahalini: 0, raisa: 0, chrisye: 0 };
+      totalGrouped = 0;
+    }
+  </script>
+</body>
+</html>
